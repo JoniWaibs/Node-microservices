@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: jwmicroservices/client # Docker image
+---
+# CLUSTER IP SERVICE (For client pod) BELOW
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+spec:
+  type: ClusterIP # Is not necessary, by default type is ClusterIP
+  selector:
+    app: client # Service for all app client named pods.
+  ports:
+    - name: client
+      protocol: TCP
+      port: 3000 # Service PORT.
+      targetPort: 3000 # POD (Docker image) PORT.

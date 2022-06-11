@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comments
+  template:
+    metadata:
+      labels:
+        app: comments
+    spec:
+      containers:
+        - name: comments
+          image: jwmicroservices/comments # Docker image
+---
+# CLUSTER IP SERVICE (For comments pod) BELOW
+apiVersion: v1
+kind: Service
+metadata:
+  name: comments-srv
+spec:
+  type: ClusterIP # Is not necessary, by default type is ClusterIP
+  selector:
+    app: comments # Service for all app comments named pods.
+  ports:
+    - name: comments
+      protocol: TCP
+      port: 4002 # Service PORT.
+      targetPort: 4002 # POD (Docker image) PORT.

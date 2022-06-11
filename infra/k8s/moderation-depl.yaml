@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderation-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderation
+  template:
+    metadata:
+      labels:
+        app: moderation
+    spec:
+      containers:
+        - name: moderation
+          image: jwmicroservices/moderation # Docker image
+---
+# CLUSTER IP SERVICE (For moderation pod) BELOW
+apiVersion: v1
+kind: Service
+metadata:
+  name: moderation-srv
+spec:
+  type: ClusterIP # Is not necessary, by default type is ClusterIP
+  selector:
+    app: moderation # Service for all app moderation named pods.
+  ports:
+    - name: moderation
+      protocol: TCP
+      port: 4003 # Service PORT.
+      targetPort: 4003 # POD (Docker image) PORT.

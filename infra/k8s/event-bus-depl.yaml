@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-bus-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-bus
+  template:
+    metadata:
+      labels:
+        app: event-bus
+    spec:
+      containers:
+        - name: event-bus
+          image: jwmicroservices/event-bus # Docker image
+---
+# CLUSTER IP SERVICE (For event-bus pod) BELOW
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-bus-srv
+spec:
+  type: ClusterIP # Is not necessary, by default type is ClusterIP
+  selector:
+    app: event-bus # Service for all app EVENT-BUS named pods.
+  ports:
+    - name: event-bus
+      protocol: TCP
+      port: 4005 # Service PORT.
+      targetPort: 4005 # POD (Docker image) PORT.

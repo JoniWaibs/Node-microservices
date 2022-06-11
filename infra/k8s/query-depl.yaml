@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: query
+  template:
+    metadata:
+      labels:
+        app: query
+    spec:
+      containers:
+        - name: query
+          image: jwmicroservices/query # Docker image
+---
+# CLUSTER IP SERVICE (For query pod) BELOW
+apiVersion: v1
+kind: Service
+metadata:
+  name: query-srv
+spec:
+  type: ClusterIP # Is not necessary, by default type is ClusterIP
+  selector:
+    app: query # Service for all app query named pods.
+  ports:
+    - name: query
+      protocol: TCP
+      port: 4004 # Service PORT.
+      targetPort: 4004 # POD (Docker image) PORT.
