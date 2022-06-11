@@ -1,4 +1,4 @@
-# Backend Blog app
+# Full-stack Blog app
 
 This service is part of a collection of services that work together to form the backend of a blog-type application.
 
